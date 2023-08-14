@@ -10,11 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3bc1145dae290124f9cc14ccdbcfc356, type: 3}
-  m_Name: HeavyAttackInitial
+  m_Name: LightAttackInitial
   m_EditorClassIdentifier: 
-  attackName: HeroKnight_Attack3
-  attackInput: 1
+  attackName: HeroKnight_Attack1
+  attackInput: 0
   attackType: 0
   isAttackUnlocked: 0
+  nextAttacks:
+  - {fileID: 11400000, guid: 4eda1d500664eb34796a13fc32a65da0, type: 2}
   attackDamage: 60
-  nextAttacks: []
+  attackMoveForce: {x: 33.333336, y: 0}
+  attackMoveDistance: 1
+  attackMoveDuration: 0.03
+  attackKnockForce: {x: 10, y: 0}
+  attackKnockDistance: 1
+  attackKnockDuration: 0.1

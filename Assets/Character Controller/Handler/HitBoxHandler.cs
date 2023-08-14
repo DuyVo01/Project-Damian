@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HitBox : MonoBehaviour
+public class HitBoxHandler : MonoBehaviour
 {
     [SerializeField] private PlayerData playerData;
 
@@ -36,5 +36,6 @@ public class HitBox : MonoBehaviour
         }
 
         damagableObject.Damage(currentAttack.AttackDamage);
+        damagableObject.KnockBack(currentAttack.AttackKnockDuration, currentAttack.AttackKnockDistance, currentAttack.AttackKnockForce);
     }
 }

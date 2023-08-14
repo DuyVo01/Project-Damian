@@ -7,21 +7,15 @@ public class AttackAnimationEvents : MonoBehaviour
 {
     public delegate void OnAttackAnimation();
     public static event OnAttackAnimation OnAttackEnd;
-    public static event OnAttackAnimation OnSkillContinue;
-    public static event OnAttackAnimation OnSkillEnd;
+    public static event OnAttackAnimation OnSkillStageChange;
 
     public void OnAttackAnimationEnd()
     {
         OnAttackEnd?.Invoke();
     }
 
-    public void OnSkillAnimationContinue()
+    public void OnSkillAnimationStageChange()
     {
-        OnSkillContinue?.Invoke();
-    }
-
-    public void OnSkillAnimationEnd()
-    {
-        OnSkillEnd?.Invoke();
+        OnSkillStageChange?.Invoke();
     }
 }

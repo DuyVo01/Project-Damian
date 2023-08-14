@@ -23,8 +23,8 @@ public class StateObserver : MonoBehaviour
         FallingState.OnAnimationEvent += FallAnimationHandler;
         WallSlideState.OnAnimationEvent += SlideAnimationHandler;
 
-        AttackState.OnAttackStateEvent += AttackAnimationHandler;
-        SkillState.OnSkillStateEvent += AttackAnimationHandler;
+        AttackComboState.OnAttackStateEvent += AttackAnimationHandler;
+        SkillState.OnSkillState += AttackAnimationHandler;
     }
 
     private void IdleAnimationHandler(bool isActiveAnimation)

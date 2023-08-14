@@ -46,7 +46,7 @@ public class GroundState : IState
     {   
         if (dependency.PlayerAttackInput.AttackButtonActive)
         {
-            dependency.FiniteStateMachine.ChangeState(dependency.StateManager.AttackState);
+            dependency.FiniteStateMachine.ChangeState(dependency.StateManager.AttackComboState);
         }
         else if (dependency.PlayerManager.GetPlayerSpeed().y > 0 && !dependency.PlayerManager.GroundCheck.PerformCheck() && !dependency.PlayerManager.WallCheck.PerformCheck())
         {

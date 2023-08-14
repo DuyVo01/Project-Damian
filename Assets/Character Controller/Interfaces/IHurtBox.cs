@@ -4,5 +4,5 @@ using UnityEngine;
 
 public interface IHurtBox: IDamagable
 {
-    public void KnockBack(Vector2 knockDirection, Vector2 knockForce);
+    public void KnockBack(float knockDuration, float knockDistance, Vector2 knockForce);
 }

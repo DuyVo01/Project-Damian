@@ -10,11 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 01dc95a74904b5d4ea1067268804fe3a, type: 3}
-  m_Name: SkillString02
+  m_Name: FirstSkill_Continue
   m_EditorClassIdentifier: 
   attackName: KnightSkill01
   attackInput: 2
   attackType: 1
   isAttackUnlocked: 0
+  nextSkillChain:
+  - {fileID: 0}
   attackDamage: 100
-  nextSkillChain: {fileID: 0}
+  attackMoveForce: {x: 10, y: 0}
+  attackMoveDistance: 1
+  attackMoveDuration: 0.1
+  attackKnockForce: {x: 20, y: 0}
+  attackKnockDistance: 4
+  attackKnockDuration: 0.2

@@ -96,20 +96,23 @@ public class AttackHandler : MonoBehaviour
         return currentSkill;
     }
 
-    public void SKillContinue()
+    public SkillData SKillContinue()
     {
         currentSkill = currentSkill.NextSkillChain[0];
         OnGetAttack?.Invoke(currentSkill);
+
+        return currentSkill;
     }
 
     public void ResetAttackData()
     {
         currentAttackIndex = 0;
         currentAttack = null;
-    }
-
-    public void ResetSkillData()
-    {
         currentSkill = null;
     }
+
+    //public void ResetSkillData()
+    //{
+    //    currentSkill = null;
+    //}
 }

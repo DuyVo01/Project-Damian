@@ -10,12 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3bc1145dae290124f9cc14ccdbcfc356, type: 3}
-  m_Name: Combo1_LightAttack3
+  m_Name: LightAttack_Branch03_LA
   m_EditorClassIdentifier: 
-  attackName: HeroKnight_Attack1
+  attackName: HeroKnight_Attack2
   attackInput: 0
   attackType: 0
   isAttackUnlocked: 0
-  attackDamage: 60
   nextAttacks:
-  - {fileID: 11400000, guid: 62a023c7fa14f684684ae539b1457167, type: 2}
+  - {fileID: 11400000, guid: 3904236ee4e31df4a977a2465e32bb51, type: 2}
+  attackDamage: 60
+  attackMoveForce: {x: 10, y: 0}
+  attackMoveDistance: 1
+  attackMoveDuration: 0.1
+  attackKnockForce: {x: 10, y: 0}
+  attackKnockDistance: 1
+  attackKnockDuration: 0.1

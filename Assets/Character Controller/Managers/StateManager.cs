@@ -24,7 +24,7 @@ public class StateManager : MonoBehaviour
     public WallJumpState WallJumpState { get; private set; }
     public WallSlideState WallSlideState { get; private set; }
     public WallBounceState WallBounceState { get; private set; }
-    public AttackState AttackState { get; private set; }
+    public AttackComboState AttackComboState { get; private set; }
     public SkillState SkillState { get; private set; }
 
     private void Awake()
@@ -48,8 +48,8 @@ public class StateManager : MonoBehaviour
         WallSlideState = new WallSlideState(shareStateDependency);
         WallBounceState = new WallBounceState(shareStateDependency);
 
-        AttackState = new AttackState(shareStateDependency, AttackHandler);
-        SkillState = new SkillState(shareStateDependency, AttackHandler, PlayerAttackInput);
+        AttackComboState = new AttackComboState(shareStateDependency, AttackHandler);
+        SkillState = new SkillState(shareStateDependency, AttackHandler);
 
         finiteStateMachine.InitializeState(IdleState);
     }
