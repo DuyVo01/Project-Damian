@@ -42,36 +42,6 @@ public class PlayerMovementInput : MonoBehaviour
         }
     }
 
-    private void ExpiringCombination()
-    {
-        foreach (InputProperties input in CombinableInputList)
-        {
-            if (!input.isInCombine || input.InputInCombineExpiredTime == 0)
-            {
-                continue;
-            }
-
-            if (Time.time - input.InputInCombineStartTime > input.InputInCombineExpiredTime)
-            {
-                input.isInCombine = false;
-            }
-        }
-    }
-
-    private void AddInputToCombinationList(InputProperties inputToAdd)
-    {
-        CombinableInputList.Add(inputToAdd);
-
-        inputToAdd.isInCombine = true;
-        inputToAdd.InputInCombineStartTime = Time.time;
-
-
-        if (CombinableInputList.Count > 2)
-        {
-            CombinableInputList.RemoveAt(0);
-        }
-    }
-
     public void OnMovementKeyPressed(InputAction.CallbackContext context)
     {
         Vector2 movementVector2D = context.ReadValue<Vector2>();
@@ -87,7 +57,6 @@ public class PlayerMovementInput : MonoBehaviour
             Jump.InputStartTime = Time.time;
             Jump.IsActive = true;
 
-            AddInputToCombinationList(Jump);
         }
         if (context.canceled)
         {
@@ -110,6 +79,5 @@ public class PlayerMovementInput : MonoBehaviour
     private void Update()
     {
         ExpiringInput();
-        ExpiringCombination();
     }
 }

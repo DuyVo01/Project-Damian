@@ -39,16 +39,17 @@ public class GroundState : IState
         if (dependency.PlayerMovementInput.Jump.IsActive && !performJump && !dependency.PlayerManager.WallCheck.PerformCheck())
         {
             PerformJump();
+            
         }
     }
 
     public virtual void StateCheckTransition()
     {   
-        if (dependency.PlayerAttackInput.AttackButtonActive)
+        if (PlayerInfor.Instance.currentAttackToExecute.Count > 0)
         {
             dependency.FiniteStateMachine.ChangeState(dependency.StateManager.AttackComboState);
         }
-        else if (dependency.PlayerManager.GetPlayerSpeed().y > 0 && !dependency.PlayerManager.GroundCheck.PerformCheck() && !dependency.PlayerManager.WallCheck.PerformCheck())
+        else if (dependency.PlayerManager.GetPlayerSpeed().y > 0 && !PlayerInfor.Instance.IsGrounded && !dependency.PlayerManager.WallCheck.PerformCheck())
         {
             dependency.FiniteStateMachine.ChangeState(dependency.StateManager.JumpState);
         }
@@ -56,7 +57,7 @@ public class GroundState : IState
         {
             dependency.FiniteStateMachine.ChangeState(dependency.StateManager.WallJumpState);
         }
-        else if (dependency.PlayerManager.GetPlayerSpeed().y < 0 && !dependency.PlayerManager.GroundCheck.PerformCheck())
+        else if (dependency.PlayerManager.GetPlayerSpeed().y < 0 && !PlayerInfor.Instance.IsGrounded)
         {
             if (coyoteStartTime == 0)
             {

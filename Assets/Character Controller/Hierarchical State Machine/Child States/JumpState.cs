@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class JumpState : AirBornState
 {
-    private bool hasSetHangingGravity;
+    public delegate void JumpStateEvent<T>(T EventArgs);
 
-    public delegate void AnimationEventHandler(bool trueOrFalse);
-    public static event AnimationEventHandler OnAnimationEvent;
+    public static event JumpStateEvent<bool> OnAnimationEvent;
+
     public JumpState(SharedStateDependency dependency) : base(dependency)
     {
     }
@@ -15,10 +15,8 @@ public class JumpState : AirBornState
     public override void Enter()
     {
         base.Enter();
-        hasSetHangingGravity = false;
+        
         Debug.Log("Enter Jump State");
-       
-        dependency.PlayerManager.SetGravity(dependency.PlayerData.gravityScale);
 
         if (OnAnimationEvent != null)
         {
@@ -34,6 +32,8 @@ public class JumpState : AirBornState
         {
             OnAnimationEvent(false);
         }
+
+        EdgeCorrection.ShouldCheck = false;
     }
 
     public override void FixedUpdate()
@@ -46,22 +46,13 @@ public class JumpState : AirBornState
     public override void Update()
     {
         base.Update();
-        HangingState();
-        dependency.PlayerManager.UpperEdgeCheck.PerformActionCheck();
+        //HangingState();
+
         if (dependency.PlayerManager.GetPlayerSpeed().y < 0)
         {
             dependency.FiniteStateMachine.ChangeState(dependency.StateManager.FallingState);
         }
         
-    }
-
-    private void HangingState()
-    {
-        if (Mathf.Abs(dependency.PlayerManager.GetPlayerSpeed().y) < dependency.PlayerData.hangingSpeedThreshold && !hasSetHangingGravity)
-        {
-            dependency.PlayerManager.SetGravity(dependency.PlayerData.gravityScale * dependency.PlayerData.hangingGravityMult);
-            hasSetHangingGravity = true;
-        }
     }
 
     private void JumpCut()

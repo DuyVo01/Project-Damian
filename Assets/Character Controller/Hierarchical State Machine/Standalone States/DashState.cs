@@ -33,7 +33,7 @@ public class DashState : IState
 
     public void StateCheckTransition()
     {
-        if (dependency.PlayerManager.GroundCheck.PerformCheck())
+        if (PlayerInfor.Instance.IsGrounded)
         {
             dependency.FiniteStateMachine.ChangeState(dependency.StateManager.MovingState);
         } 
@@ -49,7 +49,6 @@ public class DashState : IState
 
     public void Update()
     {
-        dependency.PlayerManager.LowerEdgeCheck.PerformActionCheck();
         if (Time.time - enterStartTime > dependency.PlayerData.dashDuration)
         {
             StateCheckTransition();

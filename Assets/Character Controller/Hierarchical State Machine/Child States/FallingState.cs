@@ -14,8 +14,12 @@ public class FallingState : AirBornState
     public override void Enter()
     {
         base.Enter();
+        GroundCheck.ShouldCheck = true;
+        EdgeCorrection.ShouldCheck = false;
         Debug.Log("Enter Falling State");
-        IncreaseGravity();
+
+        dependency.PlayerManager.SetGravity(dependency.PlayerData.gravityScale);
+
         if (OnAnimationEvent != null)
         {
             OnAnimationEvent(true);
@@ -25,7 +29,7 @@ public class FallingState : AirBornState
     public override void Exit()
     {
         base.Exit();
-        dependency.PlayerManager.SetGravity(dependency.PlayerData.gravityScale);
+
         if (OnAnimationEvent != null)
         {
             OnAnimationEvent(false);
@@ -35,6 +39,7 @@ public class FallingState : AirBornState
     public override void FixedUpdate()
     {
         base.FixedUpdate();
+        FasterFalling();
         FallingSpeedCap();
     }
 
@@ -54,10 +59,8 @@ public class FallingState : AirBornState
         dependency.PlayerManager.SetVelocity(fallingSpeedCap);
     }
 
-    private void IncreaseGravity()
+    private void FasterFalling()
     {
-        float gravityScale = dependency.PlayerData.gravityScale;
-        float gravityMult = dependency.PlayerData.fallGravityMult;
-        dependency.PlayerManager.SetGravity(gravityScale * gravityMult);
+        dependency.PlayerManager.playerRb.AddForce(Vector2.down * dependency.PlayerData.maxFallSpeed * 2, ForceMode2D.Force);
     }
 }

@@ -7,8 +7,8 @@ using UnityEngine;
 public class AttackCombination
 {
     [SerializeField] private string attackName;
-    [field: SerializeField] public InputEnum InputModifier01 { get; set; }
-    [field: SerializeField] public InputEnum InputModifier02 { get; set; }
-    [field: SerializeField] public InputEnum InputAttack { get; set; }
-    [field: SerializeField] public AttackEnum Attack { get; set; }
+    [field: SerializeField] public InputType InputModifier01 { get; set; }
+    [field: SerializeField] public InputType InputModifier02 { get; set; }
+    [field: SerializeField] public InputType InputAttack { get; set; }
+    [field: SerializeField] public Attack Attack { get; set; }
 }

@@ -24,7 +24,6 @@ public class StateObserver : MonoBehaviour
         WallSlideState.OnAnimationEvent += SlideAnimationHandler;
 
         AttackComboState.OnAttackStateEvent += AttackAnimationHandler;
-        SkillState.OnSkillState += AttackAnimationHandler;
     }
 
     private void IdleAnimationHandler(bool isActiveAnimation)

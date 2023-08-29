@@ -5,9 +5,10 @@ using UnityEngine;
 public interface IAttack
 {
     public string AttackName { get; set; }
-    public AttackEnum AttackInput { get; set; }
+    public Attack AttackInput { get; set; }
     public AttackType AttackType { get; set; }
     public bool IsAttackUnlocked { get; set; }
+    public AttackData[] NextAttacks { get; set; }
 
     //Attack Damage
     public float AttackDamage { get; set; }

@@ -10,50 +10,49 @@ public class AttackHandler : MonoBehaviour
 {
     [SerializeField] private AttackData lightAttack;
     [SerializeField] private AttackData heavyAttack;
-    [SerializeField] private SkillData[] skills;
+    [SerializeField] private AttackData[] skillAttacks;
 
     public delegate void AttackDataEventHandler(IAttack attackProperties);
     public static event AttackDataEventHandler OnGetAttack;
 
-    private AttackData currentAttack;
+    private AttackData currentComboAttack;
     private AttackData[] nextAttacks;
-    private int currentAttackIndex;
+    private int currentComboIndex;
 
-    private SkillData currentSkill;
+    private AttackData currentSkillAttack;
 
-
+    
     private void Start()
     {
-        currentAttackIndex = 0;
+        currentComboIndex = 0;
 
-        currentAttack = null;
-        currentSkill = null;
+        PlayerAttackInput.OnAttackInputPressed += GetAttack;
     }
 
-    public IAttack GetAttack(AttackEnum attackInput)
+    public void GetAttack(Attack attackInput)
     {
-        if (attackInput == AttackEnum.lightComboAttack || attackInput == AttackEnum.heavyComboAttack)
+        if (attackInput == Attack.lightComboAttack || attackInput == Attack.heavyComboAttack)
         {
-            return GetNormalAttack(attackInput);
+            PlayerInfor.Instance.AddAttackToExecuteQueue(GetNormalAttack(attackInput));
         }
         else
         {
-            return GetSKillAttack(attackInput);
+            PlayerInfor.Instance.AddAttackToExecuteQueue(GetSkillAttack(attackInput));
         }
     }
 
-    public AttackData GetNormalAttack(AttackEnum attackInput)
+    public AttackData GetNormalAttack(Attack attackInput)
     {
-        currentAttack = null;
-        if (currentAttackIndex == 0)
+        currentComboAttack = null;
+        if (currentComboIndex == 0)
         {
             if (lightAttack.AttackInput == attackInput)
             {
-                currentAttack = lightAttack;
+                currentComboAttack = lightAttack;
             }
             else if (heavyAttack.AttackInput == attackInput)
             {
-                currentAttack = heavyAttack;
+                currentComboAttack = heavyAttack;
             }
         }
         else
@@ -62,57 +61,54 @@ public class AttackHandler : MonoBehaviour
             {
                 if (attack.AttackInput == attackInput)
                 {
-                    currentAttack = attack;
+                    currentComboAttack = attack;
                 }
             }
         }
 
-        if (currentAttack != null)
+        if (currentComboAttack != null)
         {
-            OnGetAttack?.Invoke(currentAttack);
-            nextAttacks = currentAttack.NextAttacks;
+            OnGetAttack?.Invoke(currentComboAttack);
+            nextAttacks = currentComboAttack.NextAttacks;
         }
 
-        currentAttackIndex++;
+        currentComboIndex++;
 
-        return currentAttack;
+        return currentComboAttack;
     }
 
-    private SkillData GetSKillAttack(AttackEnum attackInput)
+    private AttackData GetSkillAttack(Attack attackInput)
     {
-        foreach (SkillData skill in skills)
+        currentSkillAttack = null;
+
+        foreach (AttackData skill in skillAttacks)
         {
             if (skill.AttackInput == attackInput)
             {
-                currentSkill = skill;
+                currentSkillAttack = skill;
                 break;
             }
         }
 
-        if (currentSkill != null)
+        if (currentSkillAttack != null)
         {
-            OnGetAttack?.Invoke(currentSkill);
+            OnGetAttack?.Invoke(currentSkillAttack);
         }
-        return currentSkill;
+        return currentSkillAttack;
     }
 
-    public SkillData SKillContinue()
+    public AttackData SkillNextStage()
     {
-        currentSkill = currentSkill.NextSkillChain[0];
-        OnGetAttack?.Invoke(currentSkill);
+        currentSkillAttack = currentSkillAttack.NextAttacks[0];
+        OnGetAttack?.Invoke(currentSkillAttack);
 
-        return currentSkill;
+        return currentSkillAttack;
     }
 
     public void ResetAttackData()
     {
-        currentAttackIndex = 0;
-        currentAttack = null;
-        currentSkill = null;
+        currentComboIndex = 0;
+        currentComboAttack = null;
+        currentSkillAttack = null;
     }
-
-    //public void ResetSkillData()
-    //{
-    //    currentSkill = null;
-    //}
 }

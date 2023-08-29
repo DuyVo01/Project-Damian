@@ -34,10 +34,6 @@ public class AirBornState : IState
     public virtual void Update()
     {
         movementInput = dependency.PlayerMovementInput.MovementVector;
-        if(movementInput.x != 0)
-        {
-            dependency.PlayerManager.LowerEdgeCheck.PerformActionCheck();
-        }
         StateCheckTransition();
     }
 
@@ -49,18 +45,14 @@ public class AirBornState : IState
         float airAccelMult = dependency.PlayerData.airAccelerationMult;
         float airDecelMult = dependency.PlayerData.airDecelerationMult;
 
-        float lerpValue = 0.75f;
+        float lerpValue = 0.5f;
 
         float targetSpeed = maxSpeed * movementInput.x;
 
         targetSpeed = Mathf.Lerp(dependency.PlayerManager.GetPlayerSpeed().x, targetSpeed, lerpValue);
 
         float accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? acceleration * airAccelMult : deceleration * airDecelMult;
-        if (Mathf.Abs(dependency.PlayerManager.GetPlayerSpeed().y) < dependency.PlayerData.hangingSpeedThreshold)
-        {
-            targetSpeed *= dependency.PlayerData.hangingMaxSpeedMult;
-            accelRate *= dependency.PlayerData.hangingAccelerationMult;
-        }
+
         float speedDifference = targetSpeed - dependency.PlayerManager.GetPlayerSpeed().x;
         float movementForce = speedDifference * accelRate;
 
@@ -70,7 +62,7 @@ public class AirBornState : IState
 
     public virtual void StateCheckTransition()
     {
-        if (dependency.PlayerManager.GroundCheck.PerformCheck())
+        if (PlayerInfor.Instance.IsGrounded)
         {
             dependency.FiniteStateMachine.ChangeState(dependency.StateManager.MovingState);
         }

@@ -46,10 +46,6 @@ public class MovingState : GroundState
         base.FixedUpdate();
         MovementHandler();
         FrictionOnStop();
-        if (movementInput.x != 0)
-        {
-            dependency.PlayerManager.LowerEdgeCheck.PerformActionCheck();
-        }
     }
 
     public void MovementHandler()

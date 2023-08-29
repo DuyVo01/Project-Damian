@@ -1,22 +1,45 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GroundCheck : IBooleancheck
+public class GroundCheck : MonoBehaviour
 {
-    private Transform checkPoint;
-    private Vector2 checkSize;
-    private LayerMask groundLayer;
+    public static bool ShouldCheck { get; set; }
 
-    public GroundCheck(Transform checkPoint, Vector2 checkSize, LayerMask groundLayer) 
+    [SerializeField] private Transform checkPoint;
+    [SerializeField] private Vector2 checkSize;
+    [SerializeField] private LayerMask groundLayer;
+
+    private void Start()
     {
-        this.checkPoint = checkPoint;
-        this.checkSize = checkSize;
-        this.groundLayer = groundLayer;
+        ShouldCheck = true;
+    }
+    private void FixedUpdate()
+    {
+        if (!ShouldCheck)
+        {
+            PlayerInfor.Instance.IsGrounded = false;
+            return;
+        }
+
+        PerformCheck();
     }
 
-    public bool PerformCheck()
+    public void PerformCheck()
     {
-        return Physics2D.OverlapBox(checkPoint.position, checkSize, 0, groundLayer);
+        if(Physics2D.OverlapBox(checkPoint.position, checkSize, 0, groundLayer))
+        {
+            PlayerInfor.Instance.IsGrounded = true;
+        }
+        else
+        {
+            PlayerInfor.Instance.IsGrounded = false;
+        }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireCube(checkPoint.position, checkSize);
     }
 }

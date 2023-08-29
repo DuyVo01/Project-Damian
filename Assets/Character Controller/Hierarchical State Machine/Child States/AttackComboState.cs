@@ -5,58 +5,53 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
-public class AttackComboState : AttackState
-{
+public class AttackComboState : IState
+{ 
+    private bool isAttackEnd;
+    private bool isAttackStart;
+    private float attackMoveTime;
+    private IAttack currentAttack;
+
+    protected SharedStateDependency dependency;
+    protected AttackHandler attackHandler;
+
     public delegate void StateEventHandler(string attackName);
     public static event StateEventHandler OnAttackStateEvent;
 
-    public AttackComboState(SharedStateDependency dependency, AttackHandler attackData) : base(dependency, attackData)
+    protected Queue<IAttack> executeLists = new Queue<IAttack>();
+
+    public AttackComboState(SharedStateDependency dependency, AttackHandler attackHandler)
     {
-        
+        this.dependency = dependency;
+        this.attackHandler = attackHandler;
     }
 
-    public override void Enter()
+    public void Enter()
     {
-        base.Enter();
+        AttackAnimationEvents.OnAttackEnd += AttackAnimationEnd;
         StopMoving();
 
-        attackMoveTime = 0;
-
-        ReadInput(dependency.PlayerMovementInput.CombinableInputList, dependency.PlayerAttackInput.CurrentAttackInput);
-
-        if (executeLists.Count > 0)
-        {
-            currentAttack = attackHandler.GetAttack(executeLists.Dequeue());
-        }
+        executeLists.Enqueue(PlayerInfor.Instance.currentAttackToExecute.Dequeue());
+        currentAttack = executeLists.Dequeue();
 
         if (currentAttack != null)
         {
-            if (currentAttack.AttackType == AttackType.skillAttack)
-            {
-                return;
-            }
-
-            OnAttackStateEvent?.Invoke(currentAttack.AttackName);
+            Debug.Log(currentAttack.AttackName);
+            OnAttackStateEvent(currentAttack.AttackName);
             isAttackEnd = false;
             isAttackStart = true;
         }
-        else
-        {
-            isAttackEnd = true;
-        }
-
-        Debug.Log(currentAttack);
     }
 
-    public override void Exit()
+    public void Exit()
     {
-        base.Exit();
         attackHandler.ResetAttackData();
+
+        AttackAnimationEvents.OnAttackEnd -= AttackAnimationEnd;
     }
 
-    public override void FixedUpdate()
+    public void FixedUpdate()
     {
-        base.FixedUpdate();
         if(currentAttack == null)
         {
             return;
@@ -76,18 +71,16 @@ public class AttackComboState : AttackState
         }
     }
 
-    public override void StateCheckTransition()
+    public void StateCheckTransition()
     {
-        base.StateCheckTransition();
-        if (currentAttack != null && currentAttack.AttackType == AttackType.skillAttack)
+        if (isAttackEnd && executeLists.Count == 0)
         {
-            dependency.FiniteStateMachine.ChangeState(dependency.StateManager.SkillState);
+            dependency.FiniteStateMachine.ChangeState(dependency.StateManager.IdleState);
         }
     }
 
-    public override void Update()
+    public void Update()
     {
-        //base.Update();
         ExecuteAttack();
         StateCheckTransition();
     }
@@ -96,8 +89,8 @@ public class AttackComboState : AttackState
     {
         if (isAttackEnd && executeLists.Count > 0)
         {
-            currentAttack = attackHandler.GetAttack(executeLists.Dequeue());
-            if (currentAttack != null && isAttackEnd)
+            currentAttack = executeLists.Dequeue();
+            if (currentAttack != null)
             {
                 Debug.Log(currentAttack.AttackName);
                 OnAttackStateEvent(currentAttack.AttackName);
@@ -105,5 +98,33 @@ public class AttackComboState : AttackState
                 isAttackStart = true;
             }
         }
+    }
+
+    protected void StopMoving()
+    {
+        dependency.PlayerManager.AddForceToPlayer(-dependency.PlayerManager.GetPlayerSpeed().x * Vector2.right, 1);
+    }
+
+    protected void AttackMoving()
+    {
+        if (currentAttack == null)
+        {
+            return;
+        }
+
+        Vector2 movingForce = currentAttack.AttackMoveForce;
+
+        if (!dependency.PlayerData.isFacingRight)
+        {
+            movingForce.x = -movingForce.x;
+        }
+
+        dependency.PlayerManager.AddForceToPlayer(movingForce, 1);
+    }
+
+    protected void AttackAnimationEnd()
+    {
+        isAttackEnd = true;
+        executeLists.Enqueue(PlayerInfor.Instance.GetAttackFromQueue());
     }
 }

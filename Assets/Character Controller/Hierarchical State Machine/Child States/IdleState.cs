@@ -44,7 +44,7 @@ public class IdleState : GroundState
 
     public override void FixedUpdate() 
     { 
-        //base.FixedUpdate();
+        base.FixedUpdate();
     }
 
     private void StopMoving()
